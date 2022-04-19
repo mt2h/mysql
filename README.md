@@ -71,7 +71,17 @@ DELETE FROM users WHERE id = 3;
 DELETE FROM users WHERE name = "Vicky";
 ```
 
-Importing and Exporting data
+Importing and Exporting data 
+
+```bash
+mysqldump -uadmin -hlocalhost -p********** tutorial1
+mysqldump -uadmin -hlocalhost -p********** tutorial1 > temp.sql
+```
 
 ```sql
+CREATE DATABASE temp;
+```
+
+```bash
+mysql -uadmin -hlocalhost -p********** temp < temp.sql
 ```

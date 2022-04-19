@@ -85,3 +85,37 @@ CREATE DATABASE temp;
 ```bash
 mysql -uadmin -hlocalhost -p********** temp < temp.sql
 ```
+
+Operators
+
+```sql
+USE tutorial1;
+DROP TABLE users;
+CREATE TABLE users (id INT PRIMARY KEY AUTO_INCREMENT, name TEXT, age INT);
+INSERT INTO users (name, age) VALUES ("Bob", 46);
+SELECT COUNT(*) users;
+SELECT * FROM users WHERE age < 30;
+SELECT * FROM users WHERE age > 30;
+SELECT * FROM users WHERE age <= 30;
+SELECT * FROM users WHERE name != "Bob";
+SELECT * FROM users WHERE name IS NULL;
+SELECT * FROM users WHERE name IS NOT NULL;
+SELECT * FROM users WHERE name LIKE "%o%";
+SELECT * FROM users WHERE name NOT LIKE "%o%";
+SELECT * FROM users WHERE age > 30 AND name LIKE '%o%' AND name IS NOT NULL;
+SELECT * FROM users WHERE (age < 20 OR age > 30) AND name = 'Bob';
+SELECT COUNT(*) FROM users WHERE NOT ((age < 20) OR (age >= 39));
+SELECT * FROM users WHERE age < 46 XOR age < 46; --returns TRUE if one or the other but not both is TRUE
+```
+
+Update, Order and Limit
+
+```sql
+UPDATE users SET name = "Jim" WHERE name = "Bob" AND id = 6;
+SELECT * FROM users WHERE id < 20 ORDER BY name ASC;
+SELECT * FROM users WHERE id < 20 ORDER BY id DESC;
+SELECT * FROM users WHERE id < 20 ORDER BY age, name, id;
+SELECT * FROM users ORDER BY age LIMIT 5;
+SELECT * FROM users ORDER BY age LIMIT 10, 5; --offset from the firt value
+SELECT * FROM users ORDER BY age LIMIT 0, 1;
+```

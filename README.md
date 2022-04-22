@@ -119,3 +119,21 @@ SELECT * FROM users ORDER BY age LIMIT 5;
 SELECT * FROM users ORDER BY age LIMIT 10, 5; --offset from the firt value
 SELECT * FROM users ORDER BY age LIMIT 0, 1;
 ```
+
+MySQL Data Types
+
+```sql
+CREATE TABLE test(zip_code CHAR(7), name VARCHAR(60));
+CREATE TABLE test(width FLOAT);
+CREATE TABLE test(value DECIMAL(4, 2));
+-- FLOAT without precisition, DOUBLE is the double presicition than FLOAT and DECIMAL is about finantial number for exactly presicition
+CREATE TABLE test(bitfield BIT(4));
+INSERT INTO test (bitfield) VALUES (b'1111');
+SELECT BIN(bitfield) FROM test;
+CREATE TABLE products (product VARCHAR(100), available BOOLEAN DEFAULT false);
+CREATE TABLE images (name VARCHAR(50), data BLOB);
+SELECT now(), year(now()), time(now()), date(now());
+CREATE TABLE moments (id INT PRIMARY KEY AUTO_INCREMENT, theyear YEAR, thedate DATE, thetime TIME);
+CREATE TABLE products (name VARCHAR(60), sold_at TIMESTAMP DEFAULT now(), recived DATETIME);
+CREATE TABLE foods (name VARCHAR(50), temperature ENUM('cold', 'hot') DEFAULT 'cold', flavour ENUM('sweet', 'savoury') DEFAULT 'sweet');
+``` 

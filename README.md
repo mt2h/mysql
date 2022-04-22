@@ -136,4 +136,6 @@ SELECT now(), year(now()), time(now()), date(now());
 CREATE TABLE moments (id INT PRIMARY KEY AUTO_INCREMENT, theyear YEAR, thedate DATE, thetime TIME);
 CREATE TABLE products (name VARCHAR(60), sold_at TIMESTAMP DEFAULT now(), recived DATETIME);
 CREATE TABLE foods (name VARCHAR(50), temperature ENUM('cold', 'hot') DEFAULT 'cold', flavour ENUM('sweet', 'savoury') DEFAULT 'sweet');
-``` 
+```
+
+Agregate Functions and Grouping

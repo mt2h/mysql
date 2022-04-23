@@ -1,3 +1,5 @@
+Arithmetic
+
 ```sql
 DROP TABLE IF EXISTS `users`;
 
@@ -21,7 +23,11 @@ SELECT AVG(DISTINCT age) FROM users;
 SELECT MAX(age) FROM users;
 SELECT MAX(age)*COUNT(*) FROM users;
 SELECT SUM(age) FROM users;
+```
 
+The Health Survey Dataset
+
+```sql
 DROP TABLE IF EXISTS `concentration`;
 
 CREATE TABLE `concentration` (

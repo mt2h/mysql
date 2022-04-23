@@ -1,6 +1,10 @@
 Arithmetic
 
 ```sql
+CREATE DATABASE health;
+
+USE health;
+
 DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
@@ -81,6 +85,8 @@ CREATE TABLE `fat` (
 LOCK TABLES `fat` WRITE;
 
 INSERT INTO `fat` VALUES (1,'I follow a low-fat diet.'),(2,'I try to avoid fat, but my diet isnt really low fat.'),(3,'I think I eat an average amount of fat.'),(4,'I probably eat more fat than average.'),(5,'I eat a high-fat diet and consume a much greater proportion of my calories from fat than the average person.');
+
+UNLOCK TABLES;
 
 DROP TABLE IF EXISTS `health`;
 

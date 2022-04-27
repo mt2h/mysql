@@ -51,7 +51,7 @@ SELECT name, street FROM person p RIGHT OUTER JOIN address a ON p.address_id = a
 --SELECT name, street FROM person p RIGHT JOIN address a ON p.address_id = a.id;
 
 --Multiple Join
-SELECT su.id, su.country, su.age, sm.question as smoking, e.question as exercise from survey su JOIN smoke sm ON su.smoke=sm.id JOIN exercise e ON e.id=su.id;
+SELECT su.id, su.country, su.age, sm.question AS smoking, e.question AS exercise FROM survey su JOIN smoke sm ON su.smoke=sm.id JOIN exercise e ON e.id=su.id;
 ```
 
 ```sql

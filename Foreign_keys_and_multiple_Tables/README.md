@@ -50,11 +50,13 @@ SELECT name, street FROM person p LEFT OUTER JOIN address a ON p.address_id = a.
 SELECT name, street FROM person p RIGHT OUTER JOIN address a ON p.address_id = a.id;
 --SELECT name, street FROM person p RIGHT JOIN address a ON p.address_id = a.id;
 
---Multiple Join
+--multiple Join
 SELECT su.id, su.country, su.age, sm.question AS smoking, e.question AS exercise FROM survey su JOIN smoke sm ON su.smoke=sm.id JOIN exercise e ON e.id=su.id;
 ```
 
 ```sql
+USE people;
+
 DROP TABLE IF EXISTS `person`;
 DROP TABLE IF EXISTS `address`;
 DROP TABLE IF EXISTS `region`;
@@ -86,4 +88,43 @@ CREATE TABLE `person` (
 INSERT INTO `region` VALUES (1,'Derbyshire'),(2,'Staffodshire'),(3,'Nottinghamshire'),(4,'Yorkshire');
 INSERT INTO `address` VALUES (1,'Apple Lane',1),(2,'Broad Street',2),(3,'Church Lane',4);
 INSERT INTO `person` VALUES (1,'Anna',1),(2,'Bob',2),(3,'Clare',3),(5,'Arnold',1);
+```
+
+Queryng chains of tables
+
+```sql
+USE people;
+
+SELECT * 
+FROM person p 
+JOIN address a ON p.address_id = a.id
+JOIN region r ON a.region_id = r.id;
+
+--many to many
+CREATE TABLE product (id INT PRIMARY KEY auto_increment, name VARCHAR(50));
+
+INSERT INTO product (name) VALUES ('Electric cat groomer'), ('Automatic dog chaser'), ('Egg warmer');
+
+CREATE TABLE person_product (person_id INT NOT NULL, product_id INT NOT NULL,  FOREIGN KEY (person_id) REFERENCES person(id),  FOREIGN KEY (product_id) REFERENCES product(id));
+
+DESCRIBE person_product;
+
+INSERT INTO person_product (person_id, product_id) VALUES (1, 3), (5, 2), (1, 3), (1, 3), (2, 1), (3, 2);
+
+SELECT p.name, pp.product_id, pr.name 
+FROM person p 
+JOIN person_product pp ON pp.person_id = p.id  
+JOIN product pr ON pr.id = pp.product_id;
+
+--join tables to themselves
+CREATE DATABASE cinema;
+
+CREATE TABLE seats (id INT PRIMARY KEY auto_increment, free BOOLEAN);
+
+INSERT INTO seats (free) VALUES (true), (false), (true), (true), (false), (true), (false), (true), (true), (false), (true);
+
+SELECT s1.id AS 'Seat One ID' 
+FROM seats s1 
+JOIN seats s2 ON s1.id+1 = s2.id 
+WHERE s1.free = TRUE AND s2.free = TRUE;
 ```

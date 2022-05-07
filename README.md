@@ -149,3 +149,7 @@ see examples [Foreign Keys and multiple Tables](Foreign_keys_and_multiple_Tables
 Combinining Queries
 
 see examples [Combinining Queries](Combinining_Queries/README.md)
+
+Combinining Queries
+
+see examples [Altering Schemas](Altering_Schemas/README.md)

@@ -1,8 +1,6 @@
 # MySQL 
 
-## Commands
-
-Basic Commands
+## Basic Commands
 
 ```sql
 SHOW databases;
@@ -20,7 +18,7 @@ DROP TABLE users;
 CREATE TABLE users (id INT NOT NULL, username TEXT NOT NULL);
 ```
 
-Storage Engine and Configuration
+## Storage Engine and Configuration
 
 ```sql
 SHOW ENGINES;
@@ -34,7 +32,8 @@ SET DEFAULT_STORAGE_ENGINE=InnoDB;
 #/etc/mysql/my.cnf
 ```
 
-SQL Mode
+## SQL Mode
+
 ```sql
 SELECT @@GLOBAL.SQL_MODE;
 SELECT @@GLOBAL.SQL_MODE, @@SESSION.SQL_MODE;
@@ -43,7 +42,7 @@ SELECT @@SESSION.SQL_MODE;
 SET sql_mode = 'NO_ENGINE_SUBSTITUTION';
 ```
 
-More Commands
+## More Commands
 
 ```sql
 DELETE FROM users;
@@ -71,11 +70,22 @@ DELETE FROM users WHERE id = 3;
 DELETE FROM users WHERE name = "Vicky";
 ```
 
-Importing and Exporting data 
+## Importing and Exporting data 
 
 ```bash
 mysqldump -uadmin -hlocalhost -p********** tutorial1
 mysqldump -uadmin -hlocalhost -p********** tutorial1 > temp.sql
+
+mysqldump --host localhost --user admin --password --lock-tables tutorial1 users > /tmp/users.sql
+```
+
+## Export CSV
+
+```bash
+mysql localhost -u admin -p tutorial1 -p << EOQ | sed -e 's/        /,/g' | tee users.csv
+select * 
+from users
+EOQ
 ```
 
 ```sql
@@ -86,7 +96,7 @@ CREATE DATABASE temp;
 mysql -uadmin -hlocalhost -p********** temp < temp.sql
 ```
 
-Operators
+## Operators
 
 ```sql
 USE tutorial1;
@@ -108,7 +118,7 @@ SELECT COUNT(*) FROM users WHERE NOT ((age < 20) OR (age >= 39));
 SELECT * FROM users WHERE age < 46 XOR age < 46; --returns TRUE if one or the other but not both is TRUE
 ```
 
-Update, Order and Limit
+## Update, Order and Limit
 
 ```sql
 UPDATE users SET name = "Jim" WHERE name = "Bob" AND id = 6;
@@ -120,7 +130,7 @@ SELECT * FROM users ORDER BY age LIMIT 10, 5; --offset from the firt value
 SELECT * FROM users ORDER BY age LIMIT 0, 1;
 ```
 
-MySQL Data Types
+## MySQL Data Types
 
 ```sql
 CREATE TABLE test(zip_code CHAR(7), name VARCHAR(60));
@@ -138,18 +148,47 @@ CREATE TABLE products (name VARCHAR(60), sold_at TIMESTAMP DEFAULT now(), recive
 CREATE TABLE foods (name VARCHAR(50), temperature ENUM('cold', 'hot') DEFAULT 'cold', flavour ENUM('sweet', 'savoury') DEFAULT 'sweet');
 ```
 
-Agregate Functions and Grouping
+## Agregate Functions and Grouping
 
 see examples [Agregate Functions and Grouping](Agregate_Functions_and_Grouping/README.md)
 
-Foreign Keys and multiple Tables
+## Foreign Keys and multiple Tables
 
 see examples [Foreign Keys and multiple Tables](Foreign_keys_and_multiple_Tables/README.md)
 
-Combinining Queries
+## Combinining Queries
 
 see examples [Combinining Queries](Combinining_Queries/README.md)
 
-Combinining Queries
+## Combinining Queries
 
 see examples [Altering Schemas](Altering_Schemas/README.md)
+
+## Users and Privileges
+
+```sql
+CREATE USER `john`@`localhost` IDENTIFIED BY 'C!:B-=h>6+O74A#d';
+-- all tables and dastabases privileges
+GRANT ALL PRIVILEGES ON *.* TO `john`@`localhost`;
+FLUSH PRIVILEGES;
+```
+
+How to Reset Password Admin: https://www.cloudsigma.com/how-to-reset-mariadb-or-mysql-root-password/
+
+```sql
+--view users
+SELECT * FROM mysql.user;
+--delete user
+DROP USER `john`@`localhost`;
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM `john`@`localhost`;
+FLUSH PRIVILEGES;
+--specific permissions
+CREATE USER `john`@`localhost` IDENTIFIED BY 'WW}362=q?&t/,~';
+GRANT SELECT ON online_shop.* TO `john`@`localhost`;
+SHOW GRANTS FOR 'john'@'localhost';
+SELECT USER FROM mysql.user;
+```
+
+```sql
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES, CREATE VIEW, EVENT, TRIGGER, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EXECUTE ON `online_shop`.* TO 'john'@'%';
+```

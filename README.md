@@ -192,3 +192,50 @@ SELECT USER FROM mysql.user;
 ```sql
 GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES, CREATE VIEW, EVENT, TRIGGER, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EXECUTE ON `online_shop`.* TO 'john'@'%';
 ```
+
+## Views
+
+Create a simple View
+
+```sql
+USE tutorial1;
+CREATE TABLE book(id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(50) NOT NULL, notes VARCHAR (100));
+INSERT INTO bookview (id, name) VALUES (1, "The Thirty-Nine Steps");
+
+CREATE VIEW bookview AS SELECT id, name FROM book;
+SHOW FULL TABLES;
+SELECT * FROM bookview;
+
+INSERT INTO bookview (id, name) VALUES (2, "War and Peace");
+DROP VIEW bookview;
+```
+
+View Algorithms
+
+```sql
+USE online_shop;
+
+-- this algorithm is preferred as it allows your view to utilize table indexes, and doesn't introduce a delay in creating temporary table
+CREATE ALGORITHM = MERGE VIEW customer_sales1 AS SELECT c.id AS customer_id, sold_at FROM sales s JOIN customers c ON c.id = s.customer_id;
+
+--create on a temporal table
+CREATE ALGORITHM = temptable VIEW customer_sales2 AS SELECT c.id  AS customer_id, sold_at FROM sales s JOIN customers c ON c.id = s.customer_id;
+
+--default
+CREATE ALGORITHM = undefined view customer_sales3 AS SELECT c.id AS customer_id, sold_at FROM sales s JOIN customers c ON c.id = s.customer_id;
+SHOW FULL TABLES;
+```
+
+With check option
+
+```sql
+USE tutorial1;
+CREATE TABLE book(id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(50) NOT NULL);
+INSERT INTO book (id, name) VALUES (1, "The Thirty-Nine Steps");
+CREATE VIEW bookview AS SELECT id, name FROM book WHERE id < 10;
+SELECT * FROM bookview;
+--can insert data greather than 10, but can't see in this view because for the condition
+DROP VIEW bookview;
+CREATE VIEW bookview AS SELECT id, name FROM book WHERE id < 10 WITH CHECK OPTION;
+INSERT INTO bookview (id, name) VALUES (20, "War and Peace");
+```

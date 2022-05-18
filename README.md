@@ -239,3 +239,7 @@ DROP VIEW bookview;
 CREATE VIEW bookview AS SELECT id, name FROM book WHERE id < 10 WITH CHECK OPTION;
 INSERT INTO bookview (id, name) VALUES (20, "War and Peace");
 ```
+
+## Locks and Transactions
+
+see examples [Locks and Transactions](Locks_and_Transactions/README.md)

@@ -87,8 +87,46 @@ SELECT * FROM sales WHERE transaction_value > @min_value;
 
 ```sql
 USE online_shop;
+
+CREATE TABLE sales_history
+(
+  recorded DATETIME,
+  total INT NOT NULL
+);
+
 SELECT @total := SUM(transaction_value), @min_value := MIN(transaction_value) FROM sales;
 
 SELECT @total;
 SELECT @min_value;
 ```
+
+Select-Update Example
+
+```sql
+SELECT @total := sum(transaction_value) FROM sales;
+insert into sales_history (recorded, total) VALUES (NOW(), @total);
+SELECT * FROM sales_history;
+
+EXPLAIN INSERT INTO sales_history (recorded, total) VALUES (NOW(), (SELECT sum(transaction_value) FROM sales));
+```
+
+Fixing Select-Updates with Tables Locks
+
+```sql
+USE online_shop;
+
+LOCK TABLES sales READ, sales_history WRITE;
+
+SELECT @total := sum(transaction_value) FROM sales;
+INSERT INTO sales_history (recorded, total) VALUES (NOW(), @total);
+
+UNLOCK TABLES;
+
+INSERT INTO sales (customer_id, product_id, sold_at, transaction_value) VALUES (1, 1, NOW(), 88.77);
+
+SELECT * FROM sales_history;
+```
+
+## ACID InnoDB
+
+https://dev.mysql.com/doc/refman/5.6/en/mysql-acid.html

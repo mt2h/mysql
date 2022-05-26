@@ -159,6 +159,12 @@ WHERE
     last_name NOT regexp '^[A-Za-záéíóúÁÉÍÓÚ0-9ñü. ,-]*$';
 ```
 
+## Show Collection Settings
+
+```sql
+SELECT SCHEMA_NAME 'tutorial1', default_character_set_name 'charset', DEFAULT_COLLATION_NAME 'collation' FROM information_schema.SCHEMATA;
+```
+
 ## Agregate Functions and Grouping
 
 see examples [Agregate Functions and Grouping](Agregate_Functions_and_Grouping/README.md)

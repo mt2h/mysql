@@ -159,10 +159,18 @@ WHERE
     last_name NOT regexp '^[A-Za-záéíóúÁÉÍÓÚ0-9ñü. ,-]*$';
 ```
 
-## Show Collection Settings
+## Charset and Collection
+
+view configuration settings
 
 ```sql
 SELECT SCHEMA_NAME 'tutorial1', default_character_set_name 'charset', DEFAULT_COLLATION_NAME 'collation' FROM information_schema.SCHEMATA;
+```
+
+change configuration
+
+```sql
+ALTER DATABASE tutorial1 CHARACTER SET='utf8mb4' COLLATE='utf8mb4_unicode_ci';
 ```
 
 ## Agregate Functions and Grouping

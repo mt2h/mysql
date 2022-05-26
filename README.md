@@ -148,6 +148,17 @@ CREATE TABLE products (name VARCHAR(60), sold_at TIMESTAMP DEFAULT now(), recive
 CREATE TABLE foods (name VARCHAR(50), temperature ENUM('cold', 'hot') DEFAULT 'cold', flavour ENUM('sweet', 'savoury') DEFAULT 'sweet');
 ```
 
+## Regexp
+
+```sql
+SELECT first_name, last_name, id
+FROM users
+WHERE 
+    first_name NOT regexp '^[A-Za-záéíóúÁÉÍÓÚ0-9ñü. ,-]*$' 
+    OR 
+    last_name NOT regexp '^[A-Za-záéíóúÁÉÍÓÚ0-9ñü. ,-]*$';
+```
+
 ## Agregate Functions and Grouping
 
 see examples [Agregate Functions and Grouping](Agregate_Functions_and_Grouping/README.md)

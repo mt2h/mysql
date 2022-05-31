@@ -130,3 +130,58 @@ SELECT * FROM sales_history;
 ## ACID InnoDB
 
 https://dev.mysql.com/doc/refman/5.6/en/mysql-acid.html
+
+## Intro about Transaccions
+
+A simple Transaction
+
+```sql
+-- commit
+USE tutorial1;
+SET autocommit=0;
+--these datas will be insert after commit command
+--only view datas in current conections, no in news conection until these datas will be insert with commit
+INSERT INTO book (name) VALUES ('The Journey');
+INSERT INTO book (name) VALUES ('The Mountain');
+COMMIT;
+
+--rollback
+INSERT INTO book (name) VALUES ('The Universe');
+DELETE FROM book WHERE id = 3;
+UPDATE book SET name = 'The Mountain 2' WHERE name = 'The Mountain';
+ROLLBACK;
+
+SELECT * FROM book;
+```
+
+Start Transaction
+
+```sql
+-- CONNECTION 1
+--by default
+SET autocommit=1; 
+
+START TRANSACTION;
+SELECT * FROM book;
+UPDATE book SET name = 'The Valley 2' WHERE id = 1;
+
+-- CONNECTION 2
+USE tutorial1;
+START TRANSACTION;
+SELECT * FROM book;
+
+-- CONNECTION 1
+COMMIT;
+
+-- CONNECTION 2
+SELECT * FROM book;
+```
+
+InnoDB Row Locking and Isolation
+
+```sql
+SELECT @@session.tx_isolation;
+-- Table Locking
+-- Row level locking indexes
+-- Read locks (shared) write locks (exclusive)
+```

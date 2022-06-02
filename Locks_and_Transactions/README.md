@@ -185,3 +185,19 @@ SELECT @@session.tx_isolation;
 -- Row level locking indexes
 -- Read locks (shared) write locks (exclusive)
 ```
+
+ACID Isolation Levels
+
+```sql
+SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+--the lock is in rows with indexes
+
+
+--SERIALIZABLE is the highest level of the isolation, the other conections can't make something in rows into transactions
+
+--REPEATABLE READ is by default, into transaction here always we watch the same, whihout other changes in other conections, it's can be produce phantom rows 
+
+--READ COMMITTED is more low level of the isolation, if other conection make something and the changes are visible into transaction into the other conection with transaction, level with committes
+
+--READ UNCOMMITTED is as any transaction, is the lowest level of the isolation 
+```

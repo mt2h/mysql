@@ -201,3 +201,80 @@ SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
 
 --READ UNCOMMITTED is as any transaction, is the lowest level of the isolation 
 ```
+
+Serializable and Row vs Table Locking
+
+```sql
+-- conection 1
+USE people;
+
+UPDATE person SET name = 'Vic' WHERE id = 1;
+UPDATE person SET name = 'Bob' WHERE id = 2;
+UPDATE person SET name = 'John' WHERE id = 3;
+
+DELETE FROM person_product WHERE person_id = 5;
+DELETE FROM person WHERE id = 5;
+
+SHOW INDEX IN person;
+
+SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+START TRANSACTION;
+
+SET sql_safe_updates = 0; --It's useful for precaution to preventdeleting a bunch of rows at once.
+
+SELECT * FROM person WHERE id = 1;
+
+--COMMIT;
+
+-- conection 2
+USE people;
+SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+START TRANSACTION;
+
+SET sql_safe_updates = 0; --It's useful for precaution to preventdeleting a bunch of rows at once.
+
+SELECT * FROM person;
+
+UPDATE person SET name = 'Linda' WHERE id = 1; --don't work because is locked by connection 1
+
+--COMMIT;
+```
+
+_Note:_
+* _The other conexction can execute select, update, insert comand when the other conection makes a commit_
+* _Isolation level serializable locks the rows according condition in the where_
+
+```sql
+-- conection 1
+START TRANSACTION;
+SELECT * FROM person WHERE id = 1;
+
+-- conection 2
+START TRANSACTION;
+UPDATE person SET name = 'Roger' WHERE id = 2;
+
+COMMIT;
+```
+
+_Note:_
+_In this case is posible that conection 2 makes a update because conection 1 only have locks row with id equal to 1_
+
+```sql
+-- conection 1
+START TRANSACTION;
+SELECT * FROM person;
+SELECT * FROM person WHERE name = 'Roger';
+
+-- conection 2
+START TRANSACTION;
+UPDATE person SET name = 'Roger' WHERE id = 3;
+
+-- conection 1
+UPDATE person SET name = 'Clare' WHERE id = 3; --it's not possible
+```
+
+_Note:_
+_After commit conection 2, conection 1 can makes update
+_After commit conection 1, conection 2 sees update makes by conection 1

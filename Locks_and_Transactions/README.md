@@ -180,7 +180,7 @@ SELECT * FROM book;
 InnoDB Row Locking and Isolation
 
 ```sql
-SELECT @@session.tx_isolation;
+SELECT @@transaction_ISOLATION;
 -- Table Locking
 -- Row level locking indexes
 -- Read locks (shared) write locks (exclusive)
@@ -278,3 +278,52 @@ UPDATE person SET name = 'Clare' WHERE id = 3; --it's not possible
 _Note:_
 _After commit conection 2, conection 1 can makes update
 _After commit conection 1, conection 2 sees update makes by conection 1
+
+Rolling Back to Savepoints
+
+```sql
+USE tutorial1;
+
+START TRANSACTION;
+
+SELECT * FROM book;
+INSERT INTO book (name) VALUES ('The horror');
+SELECT * FROM book;
+DELETE FROM book WHERE id = 22;
+SELECT * FROM book;
+SAVEPOINT test1;
+
+UPDATE book SET name = 'The Forest' WHERE id = 1;
+ROLLBACK to test1; --ignore steps after savepoint
+SELECT * FROM book;
+
+
+ROLLBACK; --ignore all
+SELECT * FROM book;
+```
+
+```sql
+--Conection 1
+USE tutorial1;
+START TRANSACTION;
+SELECT * FROM book;
+SAVEPOINT test1;
+
+UPDATE book SET name = 'The Amazing Universe' WHERE id = 1;
+SELECT * FROM book;
+
+ROLLBACK to test1; --ignore steps after savepoint
+SELECT * FROM book;
+
+--Conection 2
+USE tutorial1;
+START TRANSACTION;
+UPDATE book SET name = 'The Chaotic Universe' WHERE id = 1;
+SELECT * FROM book;
+
+--Conection 1
+ROLLBACK;
+```
+
+_Note:_
+_Savepoint doesn't release the transaction, for this the transaction must do commit or rollback 

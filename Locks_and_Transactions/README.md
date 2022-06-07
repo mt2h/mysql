@@ -327,3 +327,112 @@ ROLLBACK;
 
 _Note:_
 _Savepoint doesn't release the transaction, for this the transaction must do commit or rollback 
+
+
+The Account Transfer Problem
+
+```sql
+CREATE DATABASE test;
+USE test;
+
+CREATE TABLE accounts(
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  balance NUMERIC(10.2) DEFAULT 0
+  );
+
+INSERT INTO accounts (balance) VALUES (1000.00);
+INSERT INTO accounts (balance) VALUES (1000.00);
+
+SELECT * FROM accounts;
+
+SET @transfer = 200.00;
+
+START TRANSACTION;
+
+UPDATE accounts SET balance = balance - @transfer WHERE id = 1;
+UPDATE accounts SET balance = balance + @transfer WHERE id = 2;
+
+COMMIT;
+
+SELECT * FROM accounts;
+```
+
+Select for Update
+
+```sql
+--connection 1
+USE test;
+
+UPDATE accounts SET balance = 800.00;
+
+SELECT * FROM accounts;
+
+START TRANSACTION;
+
+SET @withdraw = 500;
+SET @account = 1;
+
+--SELECT balance FROM accounts WHERE id=@account;
+SELECT balance FROM accounts WHERE id=@account for UPDATE;
+
+-- Check that the balance is bigger than the withdrawal amount
+
+UPDATE accounts SET balance = balance - @withdraw WHERE id=@account;
+
+COMMIT;
+
+SELECT * FROM accounts;
+
+--connection 2
+USE test;
+
+SELECT * FROM accounts;
+
+START TRANSACTION;
+
+SET @withdraw = 500;
+SET @account = 1;
+
+--SELECT balance FROM accounts WHERE id=@account;
+SELECT balance FROM accounts WHERE id=@account for UPDATE;
+
+UPDATE accounts SET balance = balance - @withdraw WHERE id=@account;
+
+COMMIT;
+
+SELECT * FROM accounts;
+```
+
+Lock in Share Mode
+
+```sql
+USE tutorial1;
+
+CREATE TABLE library(
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(50)
+  );
+
+ALTER TABLE book ADD COLUMN library_id INT AFTER name;
+ALTER TABLE book ADD CONSTRAINT fk_book_library FOREIGN KEY (library_id) REFERENCES library(id);
+
+INSERT INTO library (name) VALUES ('York'), ('Nottingham'), ('Manchester');
+
+DELETE FROM book;
+
+INSERT INTO book (name, library_id) VALUES ('Professor Smith Experiment', 1), ('Java for Absolute Beginners', 1), ('How to Became Talier', 1), ('Training Dogs for Beginners', 2), ('I AM Not a Robot', 3);
+ 
+--conection 1
+START TRANSACTION;
+
+SELECT id FROM library WHERE name="Nottingham" LOCK IN SHARE MODE;
+
+INSERT INTO book (name, library_id) VALUES ("Painting for Beginners", 2);
+
+commit;
+
+--conection 2
+USE tutorial1;
+
+DELETE FROM library WHERE id = 2;
+```

@@ -233,6 +233,8 @@ SELECT * FROM bookview;
 
 INSERT INTO bookview (id, name) VALUES (2, "War and Peace");
 DROP VIEW bookview;
+
+SHOW TABLES WHERE Tables_in__a81e48f4157f019b like '%Articulo%';
 ```
 
 View Algorithms
@@ -268,3 +270,29 @@ INSERT INTO bookview (id, name) VALUES (20, "War and Peace");
 ## Locks and Transactions
 
 see examples [Locks and Transactions](Locks_and_Transactions/README.md)
+More information: https://www.percona.com/blog/2012/03/27/innodbs-gap-locks/
+
+## Commands in AES
+
+```sql
+CALL mysql.rds_kill(1);
+
+CALL mysql.rds_kill(
+  SELECT id
+  FROM information_schema.processlist
+  WHERE user != "root" AND command = 'Query' AND time >= 300
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, INDEX, ALTER, CREATE TEMPORARY TABLES, CREATE VIEW, EVENT, TRIGGER, SHOW VIEW, CREATE ROUTINE, ALTER ROUTINE, EXECUTE, LOCK TABLES ON `sitedb`.* TO 'siteuser'@'%';
+```
+
+## Other commands
+
+```sql
+SHOW OPEN TABLES WHERE in_use > 0;
+SHOW STATUS LIKE 'last_query_cost';
+```
+
+## Optimization
+
+- https://www.section.io/engineering-education/mysql-query-performance-optimization-tips/
